@@ -1,0 +1,7 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:////PointingToDeclaration/postprocessor/[root]/index.html
+$dokka.location:/Test///PointingToDeclaration/postprocessor/[root]/-test/index.html
+$dokka.location:/Test/Test/#/PointingToDeclaration/postprocessor/[root]/-test/-test.html
+
+
