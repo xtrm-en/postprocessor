@@ -1,5 +1,5 @@
 object Coordinates {
-    const val NAME = "kotlin-template"
+    const val NAME = "postprocessor"
     const val DESC = "Project description."
 
     const val GIT_HOST = "github.com"

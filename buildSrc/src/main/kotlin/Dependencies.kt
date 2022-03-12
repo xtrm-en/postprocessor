@@ -9,6 +9,8 @@ object Plugins {
 
 object Dependencies {
     const val KOTLIN = kotlinVersion
+    const val ASM = "9.2"
+    const val KOFFEE = "8.0.2"
 
     val kotlinModules = arrayOf("stdlib")
 }
@@ -16,5 +18,6 @@ object Dependencies {
 object Repositories {
     val mavenUrls = arrayOf(
         "https://jitpack.io/",
+        "https://maven.hackery.site",
     )
 }

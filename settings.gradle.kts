@@ -1,1 +1,1 @@
-rootProject.name = "kotlin-template"
+rootProject.name = "postprocessor"

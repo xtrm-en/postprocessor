@@ -35,6 +35,11 @@ repositories {
 
 // Project Dependencies
 dependencies {
+    listOf("asm", "asm-tree").forEach {
+        api("org.ow2.asm", it, Dependencies.ASM)
+    }
+    implementation("codes.som.anthony", "koffee", Dependencies.KOFFEE)
+
     Dependencies.kotlinModules.forEach {
         implementation("org.jetbrains.kotlin", "kotlin-$it", Plugins.KOTLIN)
     }
