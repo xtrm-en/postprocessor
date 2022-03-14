@@ -12,9 +12,11 @@ plugins {
     id("org.jetbrains.dokka") version Plugins.DOKKA
 
     // Maven Publication
-    id("io.github.gradle-nexus.publish-plugin") version Plugins.NEXUS_PUBLISH
+    id("com.gradle.plugin-publish") version Plugins.GRADLE_PUBLISH_PLUGIN
+    `java-gradle-plugin`
     `maven-publish`
-    signing
+
+    id("net.kyori.blossom") version Plugins.BLOSSOM
 }
 
 group = Coordinates.GROUP
@@ -29,16 +31,28 @@ val apiSourceSet = true
 
 // Maven Repositories
 repositories {
+    mavenLocal()
     mavenCentral()
     Repositories.mavenUrls.forEach(::maven)
 }
 
+// Transitive Dependencies
+configurations {
+    val implementation by getting
+    val transitive by creating
+    implementation.extendsFrom(transitive)
+}
+
 // Project Dependencies
 dependencies {
+    val transitive by configurations
+
     listOf("asm", "asm-tree").forEach {
-        api("org.ow2.asm", it, Dependencies.ASM)
+        transitive("org.ow2.asm", it, Dependencies.ASM)
     }
-    implementation("codes.som.anthony", "koffee", Dependencies.KOFFEE)
+
+    implementation("fr.stardustenterprises", "stargrad", Dependencies.STARGRAD)
+    implementation(gradleApi())
 
     Dependencies.kotlinModules.forEach {
         implementation("org.jetbrains.kotlin", "kotlin-$it", Plugins.KOTLIN)
@@ -67,6 +81,17 @@ if (apiSourceSet) {
             it.runtimeClasspath += sourceSet.output
         }
     }
+}
+
+blossom {
+    val sb = StringBuilder()
+    val transitive by configurations
+    transitive.dependencies.forEach {
+        sb.append("${it.group}:${it.name}:${it.version}")
+        sb.append(";")
+    }
+    // hacky? yes. required? probably. who? asked.
+    replaceToken("@transitive_deps@", sb.substring(0, sb.length - 1))
 }
 
 // Disable unneeded rules
@@ -194,54 +219,19 @@ artifacts {
     defaultArtifactTasks.forEach(::archives)
 }
 
-publishing.publications {
-    // Sets up the Maven integration.
-    create("mavenJava", MavenPublication::class.java) {
-        from(components["java"])
-        defaultArtifactTasks.forEach(::artifact)
-
-        pom {
-            name.set(Coordinates.NAME)
-            description.set(Coordinates.DESC)
-            url.set("https://${Coordinates.GIT_HOST}/${Coordinates.REPO_ID}")
-
-            licenses {
-                Pom.licenses.forEach {
-                    license {
-                        name.set(it.name)
-                        url.set(it.url)
-                        distribution.set(it.distribution)
-                    }
-                }
-            }
-
-            developers {
-                Pom.developers.forEach {
-                    developer {
-                        id.set(it.id)
-                        name.set(it.name)
-                    }
-                }
-            }
-
-            scm {
-                connection.set("scm:git:git://${Coordinates.GIT_HOST}/${Coordinates.REPO_ID}.git")
-                developerConnection.set("scm:git:ssh://${Coordinates.GIT_HOST}/${Coordinates.REPO_ID}.git")
-                url.set("https://${Coordinates.GIT_HOST}/${Coordinates.REPO_ID}")
-            }
+gradlePlugin {
+    plugins {
+        create("postprocessor") {
+            displayName = "X's postprocessor"
+            description = "A plugin that allows for bytecode transformation of compiled jars."
+            id = "me.xtrm.postprocessor"
+            implementationClass = "me.xtrm.gradle.postprocessor.PostprocessorPlugin"
         }
-
-        // Configure the signing extension to sign this Maven artifact.
-        signing.sign(this)
     }
 }
 
-// Configure publishing to Maven Central
-nexusPublishing.repositories.sonatype {
-    nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-    snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-
-    // Skip this step if environment variables NEXUS_USERNAME or NEXUS_PASSWORD aren't set.
-    username.set(properties["NEXUS_USERNAME"] as? String ?: return@sonatype)
-    password.set(properties["NEXUS_PASSWORD"] as? String ?: return@sonatype)
+pluginBundle {
+    vcsUrl = "https://${Coordinates.GIT_HOST}/${Coordinates.REPO_ID}"
+    website = "https://${Coordinates.GIT_HOST}/${Coordinates.REPO_ID}"
+    tags = listOf("java", "post-processing", "jvm", "kotlin")
 }
