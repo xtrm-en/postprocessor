@@ -65,9 +65,11 @@ class PostProcessorRootPlugin : StargradPlugin() {
             it.isCanBeConsumed = false
         }
         project.afterEvaluate {
-            loadFromJarfiles(config.resolve().toList().onEach {
-                TransformerClassLoader.addURL(it.toURI().toURL())
-            })
+            loadFromJarfiles(
+                config.resolve().toList().onEach {
+                    TransformerClassLoader.addURL(it.toURI().toURL())
+                }
+            )
         }
     }
 
