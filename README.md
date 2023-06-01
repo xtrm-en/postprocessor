@@ -5,14 +5,7 @@ a [Gradle][gradle] plugin that allows for bytecode transformation of compiled ja
 
 ## how to use
 
-you can import [postprocessor][project-url] from the [gradle plugins repo][gpr]
-just by adding it to your `plugins` block:
-
-```kotlin
-plugins {
-    id("me.xtrm.postprocessor") version "{VERSION}"
-}
-```
+you can check out the [example repo](https://github.com/xtrm-en/postprocessor-example) for a working example using `buildSrc` transformers.
 
 ## troubleshooting
 

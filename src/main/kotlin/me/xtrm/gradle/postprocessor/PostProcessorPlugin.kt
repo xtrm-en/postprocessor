@@ -11,7 +11,7 @@ import java.util.zip.ZipOutputStream
 /**
  * @author xtrm
  */
-class PostProcessorPlugin: StargradPlugin() {
+class PostProcessorPlugin : StargradPlugin() {
     override val id: String =
         "me.xtrm.postprocessor"
     override val conflictsWith: Set<String> =

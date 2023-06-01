@@ -13,7 +13,6 @@ import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
-
 /**
  * @author xtrm
  */
@@ -34,17 +33,12 @@ class PostProcessorRootPlugin : StargradPlugin() {
         val classes = project.tasks.getByName("classes")
         val task = registerTask<PostProcessTask> {
             dependsOn("compileJava")
-            if (arrayOf("", "-platform-jvm", "-android", "-multiplatform").any {
-                    project.pluginManager.hasPlugin("kotlin$it")
-                }) {
-                dependsOn("compileKotlin")
+            val needsKotlin = arrayOf("", "-platform-jvm", "-android", "-multiplatform").any {
+                project.pluginManager.hasPlugin("kotlin$it")
             }
-            if (project.pluginManager.hasPlugin("groovy")) {
-                dependsOn("compileGroovy")
-            }
-            if (project.pluginManager.hasPlugin("scala")) {
-                dependsOn("compileScala")
-            }
+            if (needsKotlin) dependsOn("compileKotlin")
+            if (project.pluginManager.hasPlugin("groovy")) dependsOn("compileGroovy")
+            if (project.pluginManager.hasPlugin("scala")) dependsOn("compileScala")
 
             configure(extension)
         }

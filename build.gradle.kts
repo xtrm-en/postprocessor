@@ -57,7 +57,7 @@ dependencies {
 }
 
 blossom {
-    //TODO: replace this with a properties file
+    // TODO: replace this with a properties file
 
     val sb = StringBuilder()
     val transitive by configurations
