@@ -1,8 +1,7 @@
-# xtrm's postprocessor
+# x's postprocessor
 [![Build][badge-github-ci]][project-gradle-ci] 
 
-a [Gradle][gradle] plugin that allows for bytecode transformation of compiled jars.
-
+a plugin for drafting bytecode manipulation snippets, both via `buildSrc` or via use in other [Gradle][gradle] plugins
 ## how to use
 
 you can check out the [example repo](https://github.com/xtrm-en/postprocessor-example) for a working example using `buildSrc` transformers.

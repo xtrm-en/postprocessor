@@ -3,7 +3,7 @@ private const val kotlinVersion = "1.8.20"
 object Plugins {
     const val KOTLIN = kotlinVersion
     const val DOKKA = "1.+"
-    const val GRADLE_PUBLISH_PLUGIN = "0.18.0"
+    const val GRADLE_PUBLISH_PLUGIN = "0.21.+"
     const val KTLINT = "10.2.1"
     const val BLOSSOM = "1.+"
 }
