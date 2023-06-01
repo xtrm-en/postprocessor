@@ -1,6 +1,6 @@
 object Coordinates {
     const val NAME = "postprocessor"
-    const val DESC = "Project description."
+    const val DESC = "A Gradle plugin that allows for bytecode transformation of compiled jars."
 
     const val GIT_HOST = "github.com"
     const val REPO_ID = "xtrm-en/$NAME"

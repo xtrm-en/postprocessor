@@ -1,9 +1,9 @@
 # xtrm's postprocessor
 [![Build][badge-github-ci]][project-gradle-ci] 
 
-a gradle plugin.
+a [Gradle][gradle] plugin that allows for bytecode transformation of compiled jars.
 
-# how to use
+## how to use
 
 you can import [postprocessor][project-url] from the [gradle plugins repo][gpr]
 just by adding it to your `plugins` block:
@@ -14,18 +14,18 @@ plugins {
 }
 ```
 
-# troubleshooting
+## troubleshooting
 
 if you ever encounter any problem **related to this project**, you can [open an issue][new-issue] describing what the
 problem is. please, be as precise as you can, so that we can help you asap. we are most likely to close the issue if it
 is not related to our work.
 
-# contributing
+## contributing
 
 you can contribute by [forking the repository][fork], making your changes and [creating a new pull request][new-pr]
 describing what you changed, why and how.
 
-# licensing
+## licensing
 
 this project is under the [ISC license][project-license].
 
@@ -37,6 +37,8 @@ this project is under the [ISC license][project-license].
 [kotlin]: https://kotlinlang.org "kotlin website"
 
 [gpr]: https://plugins.gradle.com/ "gradle plugins repo"
+
+[gradle]: https://gradle.org/
 
 <!-- Project Links -->
 

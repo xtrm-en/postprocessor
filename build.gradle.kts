@@ -26,8 +26,6 @@ version = Coordinates.VERSION
 val targetVersion = "1.8"
 // What JVM version this project is written in
 val sourceVersion = "1.8"
-// Should we generate an /api/ source set
-val apiSourceSet = true
 
 // Maven Repositories
 repositories {
@@ -47,11 +45,9 @@ configurations {
 dependencies {
     val transitive by configurations
 
-    listOf("asm", "asm-tree").forEach {
-        transitive("org.ow2.asm", it, Dependencies.ASM)
-    }
+    transitive("org.ow2.asm", "asm-tree", Dependencies.ASM)
 
-    implementation("fr.stardustenterprises", "stargrad", Dependencies.STARGRAD)
+    implementation("enterprises.stardust", "stargrad", Dependencies.STARGRAD)
     implementation(gradleApi())
 
     Dependencies.kotlinModules.forEach {
@@ -60,37 +56,16 @@ dependencies {
     testImplementation("org.jetbrains.kotlin", "kotlin-test", Plugins.KOTLIN)
 }
 
-// Generate the /api/ source set
-if (apiSourceSet) {
-    sourceSets {
-        val name = "api"
-
-        val main by sourceSets
-        val test by sourceSets
-
-        val sourceSet = create(name) {
-            java.srcDir("src/$name/kotlin")
-            resources.srcDir("src/$name/resources")
-
-            this.compileClasspath += main.compileClasspath
-            this.runtimeClasspath += main.runtimeClasspath
-        }
-
-        arrayOf(main, test).forEach {
-            it.compileClasspath += sourceSet.output
-            it.runtimeClasspath += sourceSet.output
-        }
-    }
-}
-
 blossom {
+    //TODO: replace this with a properties file
+
     val sb = StringBuilder()
     val transitive by configurations
     transitive.dependencies.forEach {
         sb.append("${it.group}:${it.name}:${it.version}")
         sb.append(";")
     }
-    // hacky? yes. required? probably. who? asked.
+    // hacky? yes. required? probably.
     replaceToken("@transitive_deps@", sb.substring(0, sb.length - 1))
 }
 
@@ -155,26 +130,8 @@ tasks {
         }
     }
 
-    // The original artifact, we just have to add the API source output and the
-    // LICENSE file.
     jar {
-        if (apiSourceSet) {
-            from(sourceSets["api"].output)
-        }
         from("LICENSE")
-    }
-
-    if (apiSourceSet) {
-        // API artifact, only including the output of the API source and the
-        // LICENSE file.
-        create("apiJar", Jar::class) {
-            group = "build"
-
-            archiveClassifier.set("api")
-            from(sourceSets["api"].output)
-
-            from("LICENSE")
-        }
     }
 
     // Source artifact, including everything the 'main' does but not compiled.
@@ -183,9 +140,6 @@ tasks {
 
         archiveClassifier.set("sources")
         from(sourceSets["main"].allSource)
-        if (apiSourceSet) {
-            from(sourceSets["api"].allSource)
-        }
 
         from("LICENSE")
     }
@@ -208,11 +162,7 @@ tasks {
 val defaultArtifactTasks = arrayOf(
     tasks["sourcesJar"],
     tasks["javadocJar"]
-).also {
-    if (apiSourceSet) {
-        it.plus(tasks["apiJar"])
-    }
-}
+)
 
 // Declare the artifacts
 artifacts {
@@ -223,9 +173,15 @@ gradlePlugin {
     plugins {
         create("postprocessor") {
             displayName = "X's postprocessor"
-            description = "A plugin that allows for bytecode transformation of compiled jars."
+            description = Coordinates.DESC
             id = "me.xtrm.postprocessor"
-            implementationClass = "me.xtrm.gradle.postprocessor.PostprocessorPlugin"
+            implementationClass = "me.xtrm.gradle.postprocessor.PostProcessorPlugin"
+        }
+        create("postprocessor-root") {
+            displayName = "X's postprocessor (root)"
+            description = "Root plugin for X's postprocessor, enables buildSrc transformers."
+            id = "me.xtrm.postprocessor.root"
+            implementationClass = "me.xtrm.gradle.postprocessor.PostProcessorRootPlugin"
         }
     }
 }

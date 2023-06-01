@@ -3,27 +3,13 @@ package me.xtrm.gradle.postprocessor.api
 import org.objectweb.asm.tree.ClassNode
 
 /**
- * Base transformer interface.
- *
  * @author xtrm
- * @since 0.1.0
  */
-@FunctionalInterface
-interface Transformer {
-    /**
-     * Allows for transformation of a classfile
-     * via its parsed [ClassNode].
-     *
-     * @param classNode the parsed [ClassNode]
-     * @return wheather or not the class was modified
-     */
-    fun transform(classNode: ClassNode): Boolean
+abstract class Transformer(
+    private vararg val targets: String,
+) {
+    abstract fun transform(classNode: ClassNode)
 
-    /**
-     * Annotation used to load only required classes for transformation.
-     *
-     * @author xtrm
-     * @since 0.1.0
-     */
-    annotation class Target(vararg val value: String)
+    internal fun isTarget(name: String): Boolean =
+        targets.isEmpty() || targets.any { name.startsWith(it) }
 }
