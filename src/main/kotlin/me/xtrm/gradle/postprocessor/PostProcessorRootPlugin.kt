@@ -2,6 +2,7 @@ package me.xtrm.gradle.postprocessor
 
 import enterprises.stardust.stargrad.StargradPlugin
 import me.xtrm.gradle.postprocessor.api.Transformer
+import me.xtrm.gradle.postprocessor.api.TransformerClassLoader
 import me.xtrm.gradle.postprocessor.api.TransformerManager
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Opcodes
@@ -29,6 +30,7 @@ class PostProcessorRootPlugin : StargradPlugin() {
         extension = registerExtension()
 
         loadFromClasspath()
+        createAndLoadFromConfiguration()
 
         val classes = project.tasks.getByName("classes")
         val task = registerTask<PostProcessTask> {
@@ -53,7 +55,24 @@ class PostProcessorRootPlugin : StargradPlugin() {
             Collections.addAll(urls, *current.urLs)
             current = current.parent
         }
-        urls.map { File(it.file) }.filter { it.isFile && it.exists() }.forEach { file ->
+
+        loadFromJarfiles(urls.map { File(it.file) })
+    }
+
+    private fun createAndLoadFromConfiguration() {
+        val config = project.configurations.create("postprocessor") {
+            it.isCanBeResolved = true
+            it.isCanBeConsumed = false
+        }
+        project.afterEvaluate {
+            loadFromJarfiles(config.resolve().toList().onEach {
+                TransformerClassLoader.addURL(it.toURI().toURL())
+            })
+        }
+    }
+
+    private fun loadFromJarfiles(set: List<File>) {
+        set.filter { it.isFile && it.exists() && it.extension == "jar" }.forEach { file ->
             val zipFile = ZipFile(file)
             val entries: Enumeration<out ZipEntry> = zipFile.entries()
 
@@ -76,7 +95,8 @@ class PostProcessorRootPlugin : StargradPlugin() {
                 }
 
                 if (transformerName == node.name) return@lookup
-                if (transformerName == node.superName) {
+                if (node.interfaces == null) return@lookup
+                if (node.interfaces.contains(transformerName)) {
                     transformerClasses += node.name.replace('/', '.').let {
                         if (it.startsWith('/'))
                             return@let it.substring(1)
@@ -86,10 +106,7 @@ class PostProcessorRootPlugin : StargradPlugin() {
             }
 
             TransformerManager.loadAll(
-                *transformerClasses.map {
-                    @Suppress("UNCHECKED_CAST")
-                    Class.forName(it) as Class<out Transformer>
-                }.toTypedArray()
+                *transformerClasses.toTypedArray()
             )
         }
     }

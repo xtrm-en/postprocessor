@@ -36,9 +36,9 @@ repositories {
 
 // Transitive Dependencies
 configurations {
-    val implementation by getting
+    val api by getting
     val transitive by creating
-    implementation.extendsFrom(transitive)
+    api.extendsFrom(transitive)
 }
 
 // Project Dependencies

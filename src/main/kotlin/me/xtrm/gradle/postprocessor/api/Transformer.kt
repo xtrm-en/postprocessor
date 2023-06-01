@@ -5,11 +5,7 @@ import org.objectweb.asm.tree.ClassNode
 /**
  * @author xtrm
  */
-abstract class Transformer(
-    private vararg val targets: String,
-) {
-    abstract fun transform(classNode: ClassNode)
-
-    internal fun isTarget(name: String): Boolean =
-        targets.isEmpty() || targets.any { name.startsWith(it) }
+@FunctionalInterface
+fun interface Transformer {
+    fun transform(classNodes: MutableMap<String, ClassNode>)
 }
