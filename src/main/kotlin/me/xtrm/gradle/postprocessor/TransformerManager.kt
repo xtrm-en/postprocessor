@@ -14,9 +14,11 @@ object TransformerManager {
     private val transformers = mutableListOf<Transformer>()
 
     fun loadAllClassNames(vararg classNames: String) =
-        loadAllClasses(*classNames.map {
-            Class.forName(it, true, TransformerClassLoader)
-        }.toTypedArray())
+        loadAllClasses(
+            *classNames.map {
+                Class.forName(it, true, TransformerClassLoader)
+            }.toTypedArray()
+        )
 
     internal fun loadAllClasses(vararg classes: Class<*>) {
         classes.forEach { clazz ->
