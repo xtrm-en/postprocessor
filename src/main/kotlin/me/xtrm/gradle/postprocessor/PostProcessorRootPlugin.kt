@@ -2,8 +2,6 @@ package me.xtrm.gradle.postprocessor
 
 import enterprises.stardust.stargrad.StargradPlugin
 import me.xtrm.gradle.postprocessor.api.Transformer
-import me.xtrm.gradle.postprocessor.api.TransformerClassLoader
-import me.xtrm.gradle.postprocessor.api.TransformerManager
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.ClassNode
@@ -30,10 +28,23 @@ class PostProcessorRootPlugin : StargradPlugin() {
         extension = registerExtension()
 
         loadFromClasspath()
-        createAndLoadFromConfiguration()
+        val config = project.configurations.create("postprocessor") {
+            it.isCanBeResolved = true
+            it.isCanBeConsumed = false
+            it.isVisible = false
+        }
 
         val classes = project.tasks.getByName("classes")
         val task = registerTask<PostProcessTask> {
+            dependsOn(config.buildDependencies)
+            doFirst {
+                loadFromJarfiles(
+                    config.resolve().toList().onEach {
+                        TransformerClassLoader.addURL(it.toURI().toURL())
+                    }
+                )
+            }
+
             dependsOn("compileJava")
             val needsKotlin = arrayOf("", "-platform-jvm", "-android", "-multiplatform").any {
                 project.pluginManager.hasPlugin("kotlin$it")
@@ -56,24 +67,11 @@ class PostProcessorRootPlugin : StargradPlugin() {
             current = current.parent
         }
 
-        loadFromJarfiles(urls.map { File(it.file) })
+        loadFromJarfiles(urls.map { File(it.file) }, resolve = true)
     }
 
-    private fun createAndLoadFromConfiguration() {
-        val config = project.configurations.create("postprocessor") {
-            it.isCanBeResolved = true
-            it.isCanBeConsumed = false
-        }
-        project.afterEvaluate {
-            loadFromJarfiles(
-                config.resolve().toList().onEach {
-                    TransformerClassLoader.addURL(it.toURI().toURL())
-                }
-            )
-        }
-    }
-
-    private fun loadFromJarfiles(set: List<File>) {
+    private fun loadFromJarfiles(set: List<File>, resolve: Boolean = false) {
+        val transformerClasses = mutableListOf<String>()
         set.filter { it.isFile && it.exists() && it.extension == "jar" }.forEach { file ->
             val zipFile = ZipFile(file)
             val entries: Enumeration<out ZipEntry> = zipFile.entries()
@@ -90,7 +88,6 @@ class PostProcessorRootPlugin : StargradPlugin() {
 
             val transformerName = Transformer::class.java.name.replace('.', '/')
 
-            val transformerClasses = mutableListOf<String>()
             classes.forEach lookup@{ classBytes ->
                 val node = ClassNode(Opcodes.ASM9).also {
                     ClassReader(classBytes).accept(it, ClassReader.EXPAND_FRAMES)
@@ -106,8 +103,14 @@ class PostProcessorRootPlugin : StargradPlugin() {
                     }
                 }
             }
+        }
 
-            TransformerManager.loadAll(
+        if (resolve) {
+            TransformerManager.loadAllClasses(
+                *transformerClasses.map { Class.forName(it) }.toTypedArray()
+            )
+        } else {
+            TransformerManager.loadAllClassNames(
                 *transformerClasses.toTypedArray()
             )
         }

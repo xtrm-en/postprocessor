@@ -2,7 +2,6 @@ package me.xtrm.gradle.postprocessor
 
 import enterprises.stardust.stargrad.task.ConfigurableTask
 import enterprises.stardust.stargrad.task.Task
-import me.xtrm.gradle.postprocessor.api.TransformerManager
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.compile.AbstractCompile
 import org.gradle.work.DisableCachingByDefault

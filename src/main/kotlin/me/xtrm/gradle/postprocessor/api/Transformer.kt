@@ -8,4 +8,5 @@ import org.objectweb.asm.tree.ClassNode
 @FunctionalInterface
 fun interface Transformer {
     fun transform(classNodes: MutableMap<String, ClassNode>)
+    fun priority(): Int = 0
 }
