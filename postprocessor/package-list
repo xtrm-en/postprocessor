@@ -1,0 +1,24 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:me.xtrm.gradle.postprocessor.api////PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor.api/index.html
+$dokka.location:me.xtrm.gradle.postprocessor.api/Transformer///PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor.api/-transformer/index.html
+$dokka.location:me.xtrm.gradle.postprocessor.api/Transformer/priority/#/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor.api/-transformer/priority.html
+$dokka.location:me.xtrm.gradle.postprocessor.api/Transformer/transform/#kotlin.collections.MutableMap[kotlin.String,org.objectweb.asm.tree.ClassNode]/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor.api/-transformer/transform.html
+$dokka.location:me.xtrm.gradle.postprocessor////PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/index.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessTask///PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-process-task/index.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessTask/PostProcessTask/#/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-process-task/-post-process-task.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessTask/run/#/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-process-task/run.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessorExtension///PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-processor-extension/index.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessorExtension/PostProcessorExtension/#org.gradle.api.Project#me.xtrm.gradle.postprocessor.PostProcessorRootPlugin/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-processor-extension/-post-processor-extension.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessorPlugin.Companion///PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-processor-plugin/-companion/index.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessorPlugin///PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-processor-plugin/index.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessorPlugin/PostProcessorPlugin/#/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-processor-plugin/-post-processor-plugin.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessorPlugin/id/#/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-processor-plugin/id.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessorRootPlugin///PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-processor-root-plugin/index.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessorRootPlugin/PostProcessorRootPlugin/#/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-processor-root-plugin/-post-processor-root-plugin.html
+$dokka.location:me.xtrm.gradle.postprocessor/PostProcessorRootPlugin/id/#/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-post-processor-root-plugin/id.html
+$dokka.location:me.xtrm.gradle.postprocessor/TransformerManager///PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-transformer-manager/index.html
+$dokka.location:me.xtrm.gradle.postprocessor/TransformerManager/loadAllClassNames/#kotlin.Array[kotlin.String]/PointingToDeclaration/postprocessor/me.xtrm.gradle.postprocessor/-transformer-manager/load-all-class-names.html
+me.xtrm.gradle.postprocessor
+me.xtrm.gradle.postprocessor.api
+
