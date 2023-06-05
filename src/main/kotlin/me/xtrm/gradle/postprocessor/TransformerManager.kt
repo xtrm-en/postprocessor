@@ -52,6 +52,10 @@ object TransformerManager {
             }.toByteArray()
         }.toMap()
     }
+
+    internal fun clear() {
+        transformers.clear()
+    }
 }
 
 internal object TransformerClassLoader : URLClassLoader(arrayOf(), PostProcessorRootPlugin::class.java.classLoader) {

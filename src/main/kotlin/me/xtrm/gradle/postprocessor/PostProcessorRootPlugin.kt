@@ -24,6 +24,7 @@ class PostProcessorRootPlugin : StargradPlugin() {
 
     override fun applyPlugin() {
         project.plugins.apply("java-library")
+        TransformerManager.clear()
 
         extension = registerExtension()
 
